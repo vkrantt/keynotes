@@ -13,9 +13,8 @@ const Btn = ({
 }) => {
     return (
         <Button
-            variant={variant}
             size={size ? size : "md"}
-            className={`w-100 rounded-1 border-0 bg-dark shadow-none fs-6`}
+            className={`w-100 rounded-1 border-0 shadow-none fs-6 ${className}`}
             type={type}
             onClick={onClick}
             style={{ background: "var(--theme)" }}

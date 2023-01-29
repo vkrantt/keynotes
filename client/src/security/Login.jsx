@@ -8,6 +8,7 @@ import storage from "../utils/storage";
 import Input from '../miscellaneous/Input';
 import Btn from '../miscellaneous/Btn'
 import Logo from "../miscellaneous/Logo";
+import classes from './Login.module.css';
 
 
 const Login = () => {
@@ -162,7 +163,7 @@ const Login = () => {
 
                         <div className="mt-3">
                             <Btn
-                                variant="dark"
+                                className={classes.button}
                                 text="Login"
                                 size="lg"
                                 type="submit"
@@ -181,8 +182,8 @@ const Login = () => {
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center mt-4 fw-bold ">
-                            <Link to="/forgot-password">Forgot Password ? </Link>
-                            <Link to="/register">Don't have any account ? </Link>
+                            <Link className={classes.links} to="/forgot-password">Forgot Password ? </Link>
+                            <Link className={classes.links} to="/signup">Don't have any account ? </Link>
                         </div>
                     </Form>
                 </Col>

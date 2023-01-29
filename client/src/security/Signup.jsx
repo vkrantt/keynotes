@@ -8,6 +8,7 @@ import storage from "../utils/storage";
 import Input from '../miscellaneous/Input';
 import Btn from '../miscellaneous/Btn'
 import Logo from "../miscellaneous/Logo";
+import classes from './Signup.module.css';
 
 
 const Signup = () => {
@@ -226,7 +227,7 @@ const Signup = () => {
 
                         <div className="mt-3">
                             <Btn
-                                variant="dark"
+                                className={classes.button}
                                 text="Register yourself"
                                 size="lg"
                                 type="submit"
@@ -248,7 +249,7 @@ const Signup = () => {
                         </div>
 
                         <div className="d-flex justify-content-between align-items-center mt-4 fw-bold ">
-                            <Link to="/login">Already have any account ? </Link>
+                            <Link className={classes.links} to="/login">Already have any account ? </Link>
                         </div>
                     </Form>
                 </Col>

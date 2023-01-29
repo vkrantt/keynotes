@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import classes from './Logo.module.css';
 
 const Logo = () => {
     return (
-        <h4 className='text-primary fw-bold'>Keynotes</h4>
+        <h4 className={`text-primary fw-bold ${classes.logo}`}>Keynotes</h4>
     )
 }
 

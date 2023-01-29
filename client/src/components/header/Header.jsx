@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import storage from '../../utils/storage';
+import classes from './Header.module.css';
 
 const Header = () => {
     const token = storage.get("thread_token");
@@ -11,7 +12,7 @@ const Header = () => {
     };
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="lg" variant='dark' className={`${classes.header}`}>
             <Container>
                 <Navbar.Brand as={Link} to="/">keynotes</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-0 shadow-none p-0 fs-6" />
@@ -29,7 +30,7 @@ const Header = () => {
                             </Nav>
                         ) : (
                             <Nav>
-                                <Button size="sm" className='bg-dark border-0' onClick={handleLogout}>Logout</Button>
+                                <Button className={`border-0 ${classes.header}`} size="sm" onClick={handleLogout}>Logout</Button>
                             </Nav>
                         )
                     }

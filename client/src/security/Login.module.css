@@ -1,0 +1,7 @@
+.button {
+  background: var(--main_theme) !important;
+}
+.links {
+  text-decoration: none;
+  color: var(--main_theme);
+}
