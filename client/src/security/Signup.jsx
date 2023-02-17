@@ -9,6 +9,7 @@ import Input from '../miscellaneous/Input';
 import Btn from '../miscellaneous/Btn'
 import Logo from "../miscellaneous/Logo";
 import classes from './Signup.module.css';
+import { BASE_URL } from "../services/helper";
 
 
 const Signup = () => {
@@ -17,9 +18,7 @@ const Signup = () => {
         firstName: "",
         lastName: "",
         email: "",
-        password: "",
-        companyName: "",
-        companyAbout: "",
+        password: ""
     });
     const [lowerCheck, setLowerCheck] = useState(false);
     const [upperCheck, setupperCheck] = useState(false);
@@ -75,7 +74,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const response = await fetch("/api/auth/register", {
+        const response = await fetch(`${BASE_URL}api/auth/createuser`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -84,9 +83,7 @@ const Signup = () => {
                 firstName: credentials.firstName,
                 lastName: credentials.lastName,
                 email: credentials.email,
-                password: credentials.password,
-                companyName: credentials.companyName,
-                companyAbout: credentials.companyAbout,
+                password: credentials.password
             }),
         });
 
@@ -179,30 +176,6 @@ const Signup = () => {
 
                         <div className="mb-3">
                             <Input
-                                id="companyName"
-                                type="text"
-                                placeholder="Company Name"
-                                text="Company Name"
-                                name="companyName"
-                                onChange={handleChange}
-                                value={credentials.companyName}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <Input
-                                id="companyAbout"
-                                type="text"
-                                placeholder="Company About"
-                                text="Company About"
-                                name="companyAbout"
-                                onChange={handleChange}
-                                value={credentials.companyAbout}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <Input
                                 id="email"
                                 type="email"
                                 placeholder="Email Address"
@@ -238,7 +211,6 @@ const Signup = () => {
                                     !credentials.lastName ||
                                     !credentials.email ||
                                     !credentials.password ||
-                                    !credentials.companyName ||
                                     !lowerCheck ||
                                     !upperCheck ||
                                     !numberCheck ||

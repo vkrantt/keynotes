@@ -1,8 +1,10 @@
 const express = require('express');
 const connection = require('./api/database/database');
 require('dotenv').config({ path: '.env' });
+const cors = require('cors')
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Server connection
