@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+import Create from '../../pages/Create';
 import storage from '../../utils/storage';
 import classes from './Header.module.css';
 
@@ -19,6 +20,7 @@ const Header = () => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         {/* Items */}
+                        <Create />
                     </Nav>
                     {
                         !token ? (
@@ -30,6 +32,7 @@ const Header = () => {
                             </Nav>
                         ) : (
                             <Nav>
+
                                 <Button className={`border-0 ${classes.header}`} size="sm" onClick={handleLogout}>Logout</Button>
                             </Nav>
                         )

@@ -1,0 +1,5 @@
+.modal-content {
+  border-radius: 0px !important;
+  border: none !important;
+  box-shadow: 0 5px 10px -5px #000 !important;
+}
