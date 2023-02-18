@@ -37,6 +37,7 @@ const createNote = async (req, res) => {
             res.status(201).json({
                 status: 201,
                 response: 'New note added.',
+                savedNote
             });
         }
     } catch (error) {

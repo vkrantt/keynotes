@@ -1,12 +1,15 @@
 import React from 'react';
+import { useContext } from 'react';
 import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+import noteContext from '../../context/notes/noteContext';
 import Create from '../../pages/Create';
 import storage from '../../utils/storage';
 import classes from './Header.module.css';
 
 const Header = () => {
     const token = storage.get("thread_token");
+    const { loggedInUser } = useContext(noteContext);
     const handleLogout = () => {
         storage.remove("thread_token");
         window.location.pathname = "/login";
@@ -19,8 +22,10 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="border-0 shadow-none p-0 fs-6" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        {/* Items */}
-                        <Create />
+                        {token &&
+                            //Items 
+                            < Create />
+                        }
                     </Nav>
                     {
                         !token ? (
@@ -32,8 +37,8 @@ const Header = () => {
                             </Nav>
                         ) : (
                             <Nav>
-
-                                <Button className={`border-0 ${classes.header}`} size="sm" onClick={handleLogout}>Logout</Button>
+                                <h6 className='text-light mt-2'>Logged In as: {loggedInUser?.firstName}</h6>
+                                <Button className={`border-0 mx-3`} onClick={handleLogout}>Logout</Button>
                             </Nav>
                         )
                     }

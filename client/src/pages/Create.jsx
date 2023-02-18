@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
-import { BASE_URL } from '../services/helper';
 import './Create.css';
 import { ToastContainer, toast } from "react-toastify";
-import storage from '../utils/storage';
+import noteContext from '../context/notes/noteContext';
 
 function MyVerticallyCenteredModal(props) {
+    const { createNotes } = useContext(noteContext)
     const [isLoading, setIsLoading] = useState(false);
     const [note, setNote] = useState({
         title: '',
@@ -28,24 +28,10 @@ function MyVerticallyCenteredModal(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const response = await fetch(`${BASE_URL}api/auth/createnote`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": storage.get('thread_token')
-            },
-            body: JSON.stringify({
-                title: note.title,
-                description: note.description,
-                important: note.important
-            }),
-        });
-
-        const json = await response.json();
-
-        switch (json.status) {
+        const createNoteResponse = await createNotes(note);
+        switch (createNoteResponse.status) {
             case 411:
-                json.response.map((err) =>
+                createNoteResponse.response.map((err) =>
                     toast(err.msg, {
                         position: "top-right",
                     })
@@ -53,12 +39,12 @@ function MyVerticallyCenteredModal(props) {
                 setIsLoading(false);
                 break;
             case 201:
-                toast(json.response);
+                toast(createNoteResponse.response);
                 setIsLoading(false);
                 props.onHide();
                 break;
             case 501:
-                toast(json.response);
+                toast(createNoteResponse.response);
                 setIsLoading(false);
                 break;
 
@@ -82,28 +68,27 @@ function MyVerticallyCenteredModal(props) {
             </Modal.Header>
             <Modal.Body >
 
+                {/* Form start */}
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Keynote Title</Form.Label>
-                        <Form.Control type="text" placeholder="Enter title" className=" shadow-none" name="title" onChange={handleChange} value={note.title} />
+                        <Form.Control type="text" placeholder="Enter title" className=" shadow-none rounded-0" name="title" onChange={handleChange} value={note.title} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Description</Form.Label>
-                        <textarea className="form-control shadow-none" placeholder='Enter description' rows="5" name="description" onChange={handleChange} value={note.description} ></textarea>
+                        <textarea className="form-control shadow-none rounded-0" placeholder='Enter description' rows="5" name="description" onChange={handleChange} value={note.description} ></textarea>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Check type="checkbox" className="shadow-none" label="Mark as Important" name="important" onChange={checkhandleChange} />
+                        <Form.Check type="checkbox" label="Mark as Important" name="important" onChange={checkhandleChange} />
                     </Form.Group>
-                    <Button disabled={!note.title} variant="primary" type="button" onClick={handleSubmit}>
+                    <Button size="sm" disabled={!note.title} variant="primary" type="button" onClick={handleSubmit}>
                         {isLoading ? <Spinner animation="border" size="sm" /> : 'Create'}
                     </Button>
                 </Form>
+                {/* Form End */}
 
             </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
         </Modal>
     );
 }
@@ -113,7 +98,6 @@ const Create = () => {
     return (
         <>
             <ToastContainer
-                position="top-center"
                 autoClose={3000}
                 hideProgressBar={true}
                 newestOnTop={false}
@@ -123,7 +107,7 @@ const Create = () => {
                 draggable
                 pauseOnHover
             />
-            <Button className="border-0" onClick={() => setModalShow(true)}>
+            <Button className="border-0" size="sm" onClick={() => setModalShow(true)}>
                 Create Keynote
             </Button>
 
