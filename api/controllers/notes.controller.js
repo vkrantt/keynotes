@@ -70,4 +70,32 @@ const getAllNotes = async (req, res) => {
 }
 
 
-module.exports = { createNote, getAllNotes }
+// delete note
+const deleteNote = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const filter = { _id: id };
+        // const identifyNote = await Note.find({ user: req.user });
+        // console.log(identifyNote, 'req.user')
+        // if (!identifyNote) {
+        //     return res.status(401).json({
+        //         status: 201,
+        //         response: 'This Note is not yours.'
+        //     });
+        // } else {
+        // }
+        await Note.findByIdAndDelete(filter);
+        res.status(201).json({
+            status: 201,
+            response: 'Note deleted.'
+        });
+    } catch (error) {
+        res.status(501).json({
+            status: 501,
+            response: serverError.INTERNAL_SERVER,
+            error,
+        });
+    }
+}
+
+module.exports = { createNote, getAllNotes, deleteNote }

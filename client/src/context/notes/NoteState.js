@@ -60,8 +60,21 @@ const NoteState = (props) => {
         return jsonData;
     }
 
+    // Delete Notes 
+    async function deleteNote(id) {
+        fetch(`${BASE_URL}api/auth/deletenote/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": storage.get('thread_token')
+            }
+        }).then(response => response.json()).then(data => {
+            setAllNotes(allNotes.filter((note) => note._id !== id))
+        })
+    }
+
     return (
-        <NoteContext.Provider value={{ allNotes, isLoading, loggedInUser: user, createNotes }}>
+        <NoteContext.Provider value={{ allNotes, isLoading, loggedInUser: user, createNotes, deleteNote }}>
             {props.children}
         </NoteContext.Provider>
     )

@@ -118,7 +118,7 @@ const Login = () => {
         <Container>
             <ToastContainer
                 position="top-center"
-                autoClose={3000}
+                autoClose={1000}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick

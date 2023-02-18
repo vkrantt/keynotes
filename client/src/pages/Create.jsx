@@ -98,7 +98,7 @@ const Create = () => {
     return (
         <>
             <ToastContainer
-                autoClose={3000}
+                autoClose={1000}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
