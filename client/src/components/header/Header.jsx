@@ -12,7 +12,7 @@ const Header = () => {
     const { loggedInUser } = useContext(noteContext);
     const handleLogout = () => {
         storage.remove("thread_token");
-        window.location.pathname = "/login";
+        window.location.pathname = "/";
     };
 
     return (
