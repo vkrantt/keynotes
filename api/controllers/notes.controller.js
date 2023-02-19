@@ -75,20 +75,26 @@ const deleteNote = async (req, res) => {
     const id = req.params.id;
     try {
         const filter = { _id: id };
-        // const identifyNote = await Note.find({ user: req.user });
-        // console.log(identifyNote, 'req.user')
-        // if (!identifyNote) {
-        //     return res.status(401).json({
-        //         status: 201,
-        //         response: 'This Note is not yours.'
-        //     });
-        // } else {
-        // }
-        await Note.findByIdAndDelete(filter);
-        res.status(201).json({
-            status: 201,
-            response: 'Note deleted.'
-        });
+        const existedNote = await Note.findById(req.params.id);
+        if (!existedNote) {
+            return res.status(401).json({
+                status: 401,
+                response: 'Not found.'
+            });
+        }
+        else if (existedNote.user.toString() !== req.user) {
+            return res.status(401).json({
+                status: 401,
+                response: 'Access denied.'
+            });
+        }
+        else {
+            await Note.findByIdAndDelete(filter);
+            res.status(201).json({
+                status: 201,
+                response: 'Note deleted.'
+            });
+        }
     } catch (error) {
         res.status(501).json({
             status: 501,
@@ -98,4 +104,39 @@ const deleteNote = async (req, res) => {
     }
 }
 
-module.exports = { createNote, getAllNotes, deleteNote }
+
+// Edit note
+const editNote = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const existedNote = await Note.findById(req.params.id);
+        if (!existedNote) {
+            return res.status(401).json({
+                status: 401,
+                response: 'Not found.'
+            });
+        }
+        else if (existedNote.user.toString() !== req.user) {
+            return res.status(401).json({
+                status: 401,
+                response: 'Access denied.'
+            });
+        }
+        else {
+            const updatedNote = await Note.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+            res.status(201).json({
+                status: 201,
+                response: 'Note edited.',
+                updatedNote
+            });
+        }
+
+    } catch (error) {
+        res.status(501).json({
+            status: 501,
+            response: serverError.INTERNAL_SERVER,
+            error,
+        });
+    }
+}
+module.exports = { createNote, getAllNotes, deleteNote, editNote }

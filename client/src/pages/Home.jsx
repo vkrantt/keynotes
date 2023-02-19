@@ -4,7 +4,12 @@ import Cards from '../components/Cards';
 import noteContext from '../context/notes/noteContext';
 
 const Home = () => {
-    const { allNotes, isLoading } = useContext(noteContext);
+    const { allNotes, isLoading, setModalShow, setupdateNoteData } = useContext(noteContext);
+
+    const updateNote = async (note) => {
+        await setupdateNoteData(note);
+        await setModalShow(true);
+    }
     return (
         <Container>
             <h4 className="mt-5">All keynotes [{allNotes.length || 0}]</h4>
@@ -15,7 +20,7 @@ const Home = () => {
                 : <Row className='my-3'>
                     {allNotes.map((note, i) => (
                         <Col lg="4" key={i}>
-                            <Cards note={note} />
+                            <Cards note={note} updateNote={updateNote} />
                         </Col>
                     ))}
                 </Row>}

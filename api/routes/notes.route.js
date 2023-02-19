@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { body } = require("express-validator");
-const { createNote, getAllNotes, deleteNote } = require("../controllers/notes.controller");
+const { createNote, getAllNotes, deleteNote, editNote } = require("../controllers/notes.controller");
 const authToken = require("../middlewares/verifyToken.middleware");
 
 router.route('/createnote').post(authToken,
@@ -17,6 +17,9 @@ router.route('/getallnotes').get(authToken, getAllNotes);
 
 // Delete note 
 router.route('/deletenote/:id').delete(authToken, deleteNote)
+
+// Edit note 
+router.route('/editnote/:id').put(authToken, editNote)
 
 
 module.exports = router;

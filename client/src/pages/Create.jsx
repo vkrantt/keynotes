@@ -1,17 +1,29 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, createRef } from 'react';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
 import './Create.css';
 import { ToastContainer, toast } from "react-toastify";
 import noteContext from '../context/notes/noteContext';
 
 function MyVerticallyCenteredModal(props) {
-    const { createNotes } = useContext(noteContext)
+    const myRef = createRef(null);
+    const { createNotes, updateNoteData, editNote } = useContext(noteContext)
     const [isLoading, setIsLoading] = useState(false);
+    const [response, setResponse] = useState({});
     const [note, setNote] = useState({
         title: '',
         description: '',
         important: false
     })
+    const node = myRef.current
+    useEffect(() => {
+        if (updateNoteData) {
+            setNote({
+                title: updateNoteData.title,
+                description: updateNoteData.description,
+            })
+        }
+    }, [updateNoteData, node])
+
     const handleChange = (e) => {
         setNote({
             ...note,
@@ -28,10 +40,24 @@ function MyVerticallyCenteredModal(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const createNoteResponse = await createNotes(note);
-        switch (createNoteResponse.status) {
+        if (updateNoteData) {
+            await editNote(updateNoteData._id, note);
+            toast('Note updated.');
+            setIsLoading(false);
+            props.onHide();
+            setNote({
+                title: '',
+                description: '',
+                important: false
+            })
+            return;
+        } else {
+            setResponse(await createNotes(note))
+        }
+
+        switch (response.status) {
             case 411:
-                createNoteResponse.response.map((err) =>
+                response.response.map((err) =>
                     toast(err.msg, {
                         position: "top-right",
                     })
@@ -39,12 +65,17 @@ function MyVerticallyCenteredModal(props) {
                 setIsLoading(false);
                 break;
             case 201:
-                toast(createNoteResponse.response);
+                toast(response.response);
                 setIsLoading(false);
                 props.onHide();
+                setNote({
+                    title: '',
+                    description: '',
+                    important: false
+                })
                 break;
             case 501:
-                toast(createNoteResponse.response);
+                toast(response.response);
                 setIsLoading(false);
                 break;
 
@@ -80,10 +111,10 @@ function MyVerticallyCenteredModal(props) {
                         <textarea className="form-control shadow-none rounded-0" placeholder='Enter description' rows="5" name="description" onChange={handleChange} value={note.description} ></textarea>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Check type="checkbox" label="Mark as Important" name="important" onChange={checkhandleChange} />
+                        <Form.Check type="checkbox" checked={updateNoteData?.important ? true : false} id="important" label="Mark as Important" name="important" onChange={checkhandleChange} />
                     </Form.Group>
                     <Button size="sm" disabled={!note.title} variant="primary" type="button" onClick={handleSubmit}>
-                        {isLoading ? <Spinner animation="border" size="sm" /> : 'Create'}
+                        {isLoading ? <Spinner animation="border" size="sm" /> : updateNoteData ? 'Update' : 'Create'}
                     </Button>
                 </Form>
                 {/* Form End */}
@@ -94,7 +125,7 @@ function MyVerticallyCenteredModal(props) {
 }
 
 const Create = () => {
-    const [modalShow, setModalShow] = useState(false);
+    const { modalShow, setModalShow } = useContext(noteContext)
     return (
         <>
             <ToastContainer

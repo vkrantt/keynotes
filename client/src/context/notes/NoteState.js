@@ -8,6 +8,8 @@ const NoteState = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [allNotes, setAllNotes] = useState([]);
     const [user, setUser] = useState();
+    const [modalShow, setModalShow] = useState(false);
+    const [updateNoteData, setupdateNoteData] = useState();
 
 
     useEffect(() => {
@@ -73,8 +75,34 @@ const NoteState = (props) => {
         })
     }
 
+    // Edit Notes 
+    async function editNote(id, note) {
+        fetch(`${BASE_URL}api/auth/editnote/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": storage.get('thread_token')
+            },
+            body: JSON.stringify({
+                title: note.title,
+                description: note.description,
+                important: note.important
+            }),
+        });
+
+        const newNotes = allNotes.map((element) => {
+            if (element._id == id) {
+                element.title = note.title;
+                element.description = note.description;
+                element.important = note.important
+            }
+            return element;
+        })
+        setAllNotes(newNotes)
+    }
+
     return (
-        <NoteContext.Provider value={{ allNotes, isLoading, loggedInUser: user, createNotes, deleteNote }}>
+        <NoteContext.Provider value={{ updateNoteData, setupdateNoteData, allNotes, isLoading, loggedInUser: user, createNotes, deleteNote, editNote, modalShow, setModalShow }}>
             {props.children}
         </NoteContext.Provider>
     )
